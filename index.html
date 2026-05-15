@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Summarizer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>AI Summarizer</h1>
+        
+        {% if error %}
+            <div class="error">{{ error }}</div>
+        {% endif %}
+
+        <form method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="mode">Choose Input Type:</label>
+                <select name="mode" id="mode" onchange="showFields(this.value)">
+                    <option value="text">Text</option>
+                    <option value="pdf">PDF</option>
+                    <option value="youtube">YouTube</option>
+                </select>
+            </div>
+
+            <div class="form-group" id="text-input">
+                <label for="text_input">Enter Text:</label>
+                <textarea name="text_input" rows="6" placeholder="Paste or type text..."></textarea>
+            </div>
+
+            <div class="form-group hidden" id="pdf-input">
+                <label for="pdf_file">Upload PDF:</label>
+                <input type="file" name="pdf_file" accept="application/pdf">
+            </div>
+
+            <div class="form-group hidden" id="youtube-input">
+                <label for="youtube_url">YouTube URL:</label>
+                <input type="text" name="youtube_url" placeholder="https://youtube.com/watch?v=...">
+            </div>
+
+            <button type="submit">Summarize</button>
+        </form>
+
+        {% if summary %}
+            <div class="summary-box">
+                <h2>Summary:</h2>
+                <p>{{ summary }}</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <script>
+        function showFields(mode) {
+            document.getElementById("text-input").classList.add("hidden");
+            document.getElementById("pdf-input").classList.add("hidden");
+            document.getElementById("youtube-input").classList.add("hidden");
+
+            if (mode === "text") {
+                document.getElementById("text-input").classList.remove("hidden");
+            } else if (mode === "pdf") {
+                document.getElementById("pdf-input").classList.remove("hidden");
+            } else if (mode === "youtube") {
+                document.getElementById("youtube-input").classList.remove("hidden");
+            }
+        }
+
+        // Load correct field on page load
+        window.onload = () => {
+            const mode = document.getElementById("mode").value;
+            showFields(mode);
+        };
+    </script>
+</body>
+</html>
